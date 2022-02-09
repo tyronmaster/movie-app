@@ -40,3 +40,9 @@ fetch("https://imdb8.p.rapidapi.com/auto-complete?q=game", {
       console.error(err);
    });
    */
+
+const searchBox = document.querySelector(".search__str");
+
+window.onload = () => {
+   searchBox.focus();
+}

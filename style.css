@@ -1,3 +1,11 @@
+:root {
+   --main-color: #444444;
+   --focus-color: #bdba06;
+   --light-color: #e5e5e5;
+   --dark-color: #111111;
+   --black-color: #000000;
+}
+
 *,
 *:after,
 *:before {
@@ -30,11 +38,11 @@ a {
    cursor: pointer;
 }
 a:hover {
-   color: #bdba06;
+   color: var(--focus-color);
    transition: color 0.5s ease;
 }
 a:active {
-   color: #bdba06;
+   color: var(--focus-color);
 }
 button {
    background: none;
@@ -42,18 +50,18 @@ button {
    cursor: pointer;
 }
 svg path {
-   fill: #444444;
+   fill: var(--main-color);
    transition: 1s;
 }
 svg:hover path {
-   fill: #bdba06;
+   fill: var(--focus-color);
 }
 input {
    background: none;
-   border: 1px solid #444444;
+   border: 1px solid var(--main-color);
    border-radius: 10px;
    padding: 15px;
-   color: #bdba06;
+   color: var(--focus-color);
    text-transform: uppercase;
    margin: 0 15px;
    width: 250px;
@@ -61,14 +69,14 @@ input {
 }
 input:hover,
 input:focus {
-   border-color: #bdba06;
+   border-color: var(--focus-color);
 }
 input::placeholder {
-   color: #444444;
+   color: var(--main-color);
    text-transform: uppercase;
 }
 input:placeholder-shown {
-   color: #444444;
+   color: var(--main-color);
    text-transform: uppercase;
 }
 ul li {
@@ -83,26 +91,30 @@ h3,
 h4,
 h5,
 h6 {
-   font-family: "Vollkorn", serif;
-   font-weight: 500;
-   color: #e5e5e5;
+   font-family: "Montserrat", sans-serif;
+   font-weight: 400;
+   color: var(--light-color);
 }
 body {
    font-family: "Montserrat", sans-serif;
-   color: #e5e5e5;
+   color: var(--light-color);
    font-size: 14px;
    font-weight: 300;
    line-height: 20px;
-   background: #111111;
+   background: var(--dark-color);
 }
 .wrapper {
    min-height: 100vh;
    overflow: hidden;
 }
 .container {
-   max-width: 1030px;
+   max-width: 1430px;
    margin: 0 auto;
    padding: 0 15px;
+
+   display: flex;
+   flex-direction: column;
+   min-height: 100vh;
 }
 .header {
    display: flex;
@@ -111,25 +123,103 @@ body {
    align-items: center;
    height: 80px;
    padding: 15px 0;
+
+   border-bottom: 1px solid var(--black-color);
 }
 .logo {
    font-size: 36px;
    font-weight: 700;
 }
 .logo span {
-   border-bottom: 1px solid #bdba06;
+   border-bottom: 1px solid var(--focus-color);
+   transition: 1s;
+   position: relative;
+}
+.logo:hover span {
+   border-bottom: 1px solid #cccccc;
 }
 .search__section {
    display: flex;
    align-items: center;
 }
+.main {
+   flex: 1 1 auto;
+}
+.slider {
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+   align-items: center;
+   text-align: center;
+   position: relative;
+   text-align: center;
+
+   /*ЗАПРЕТ ВЫДЕЛЕНИЯ ТЕКСТА*/
+   -webkit-touch-callout: none; /* iOS Safari */
+   -webkit-user-select: none; /* Chrome/Safari/Opera */
+   -khtml-user-select: none; /* Konqueror */
+   -moz-user-select: none; /* Firefox */
+   -ms-user-select: none; /* Internet Explorer/Edge */
+   user-select: none;
+}
+.prev {
+}
+.next {
+}
+.slider__container {
+   width: 90%;
+   /*background: #ffffff;*/
+   height: 250px;
+   border-radius: 25px;
+
+   overflow-y: hidden;
+   overflow-x: auto;
+
+   display: flex;
+   flex-direction: row;
+   justify-content: flex-start;
+   align-items: center;
+
+   /* customize scrollbar */
+   scrollbar-width: thin;
+   scrollbar-color: var(--black-color) var(--dark-color);
+}
+
+/* customize scrollbar for -webkit browsers*/
+.slider__container::-webkit-scrollbar {
+   height: 8px;
+   background: var(--dark-color);
+}
+.slider__container::-webkit-scrollbar-thumb {
+   background: var(--black-color);
+}
+
+.slider__item {
+   margin: 15px 30px;
+   text-align: left;
+}
+.slider__poster {
+   width: 125px;
+   height: 150px;
+   border-radius: 5px;
+   margin-bottom: 10px;
+}
+.slider__poster img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+   border-radius: 5px;
+}
+.item__title {
+}
+
 .movies {
    width: 100%;
    display: flex;
    flex-wrap: wrap;
 }
-.movies li {
-   flex: 1;
+.movie__container {
+   flex: 1 1 auto;
    display: flex;
    flex-direction: column;
    align-items: center;
@@ -138,20 +228,67 @@ body {
    padding: 15px;
    border-radius: 12px;
    text-align: center;
-   background: #000000;
+   background: var(--black-color);
+   overflow: hidden;
    cursor: pointer;
+   position: relative;
+   transition: 0.2s;
 }
-.movies li img {
+.movie__container:hover {
+   transform: scale(1.05);
+}
+.movie__container img {
    max-width: 300px;
    border-radius: 12px;
    object-fit: cover;
 }
-.movies li h2 {
-   color: #ffffff;
+.movie__container h2 {
+   color: var(--light-color);
    font-size: 1.8em;
    padding: 15px 10px 0;
    margin-top: auto;
-   font-family: "Montserrat";
+}
+.movie__rate {
+   width: 100%;
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+}
+.movie__stars {
+}
+.rate {
+}
+.movie__container:hover .movie__plot {
+   bottom: 0;
+   opacity: 0.9;
+}
+.movie__plot {
+   width: 100%;
+   max-height: 100%;
+   text-align: left;
+   background: var(--main-color);
+   color: var(--light-color);
+   padding: 15px;
+   border-radius: 12px;
+   position: absolute;
+   bottom: -100%;
+   opacity: 0;
+   transition: 0.5s ease-in-out;
+
+   overflow-x: hidden;
+   overflow-y: auto;
+
+   /* customize scrollbar */
+   scrollbar-width: thin;
+   scrollbar-color: var(--focus-color) var(--dark-color);
+}
+/* customize scrollbar for -webkit browsers*/
+.movie__plot::-webkit-scrollbar {
+   width: 8px;
+   background: var(--dark-color);
+}
+.movie__plot::-webkit-scrollbar-thumb {
+   background: var(--focus-color);
 }
 
 /* FOOTER SECTION =====================================*/
@@ -159,7 +296,7 @@ body {
 .footer {
    height: 90px;
    /*width: 100%;*/
-   border-top: 1px solid #000000;
+   border-top: 1px solid var(--black-color);
    padding: 15px;
    display: flex;
    flex-direction: row;
@@ -172,17 +309,17 @@ body {
    margin: 10px;
 }
 .footer__link svg path {
-   fill: #444444;
+   fill: var(--main-color);
    transition: 1s ease-in-out;
 }
 .footer__link:hover svg path {
-   fill: #bdba06;
+   fill: var(--focus-color);
 }
 .footer__link {
-   color: #444444;
+   color: var(--main-color);
    transition: 1s ease-in-out;
 }
 .footer__link:hover {
-   color: #bdba06;
+   color: var(--focus-color);
    filter: blur(1px);
 }
