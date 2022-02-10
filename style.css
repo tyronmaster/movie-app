@@ -185,8 +185,11 @@ body {
    width: 100%;
 }
 .prev {
+   transform: rotate(180deg);
+   cursor: pointer;
 }
 .next {
+   cursor: pointer;
 }
 .slider__container {
    width: 90%;
@@ -299,6 +302,7 @@ body {
    overflow: hidden;
    cursor: pointer;
    position: relative;
+
    transition: 0.2s;
 }
 .movie__container:hover {
