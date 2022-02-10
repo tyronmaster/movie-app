@@ -44,7 +44,28 @@ fetch("https://imdb8.p.rapidapi.com/auto-complete?q=game", {
    */
 
 const searchBox = document.querySelector(".search__str");
+const clearButton = document.querySelector(".clear__btn");
+const searchButton = document.querySelector(".search__btn");
 
 window.onload = () => {
    searchBox.focus();
 }
+searchBox.addEventListener("change", function(){
+   url = `http://www.omdbapi.com/?apikey=c8ed38c2&s=${this.value}&`
+   console.log(url);
+});
+searchBox.addEventListener("input", function(){
+   if (this.value !== ""){
+      clearButton.classList.add("active");
+      searchButton.classList.add("active")
+   } else {
+      clearButton.classList.remove("active");
+      searchButton.classList.remove("active");
+   }
+   
+})
+clearButton.addEventListener("click", function(){
+   searchBox.value = "";
+   this.classList.remove("active");
+   searchButton.classList.remove("active");
+})
