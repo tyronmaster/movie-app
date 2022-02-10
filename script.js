@@ -1,4 +1,6 @@
-var url = "http://www.omdbapi.com/?apikey=c8ed38c2&t=game&";
+/*var url = "http://www.omdbapi.com/?apikey=c8ed38c2&t=game&";*/
+
+var url = "https://api.themoviedb.org/3/movie/550?api_key=e3d3ddb01fbf1cb4fe05c7d1d14ed8a9";
 
 fetch(url, {
    "method": "GET",

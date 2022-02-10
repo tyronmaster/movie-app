@@ -61,6 +61,7 @@ input {
    border: 1px solid var(--main-color);
    border-radius: 10px;
    padding: 15px;
+   padding-right: 45px;
    color: var(--focus-color);
    text-transform: uppercase;
    margin: 0 15px;
@@ -141,13 +142,18 @@ body {
 .search__section {
    display: flex;
    align-items: center;
+   position: relative;
+}
+.search__btn {
+   position: absolute;
+   right: 8%;
 }
 .main {
    flex: 1 1 auto;
 }
 .slider {
    display: flex;
-   flex-direction: row;
+   flex-direction: column;
    justify-content: space-between;
    align-items: center;
    text-align: center;
@@ -161,6 +167,22 @@ body {
    -moz-user-select: none; /* Firefox */
    -ms-user-select: none; /* Internet Explorer/Edge */
    user-select: none;
+}
+.slider__title {
+   margin: 25px 0 0 0;
+   font-size: 28px;
+   font-weight: 400;
+}
+.slider__body {
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+   align-items: center;
+   text-align: center;
+   position: relative;
+   text-align: center;
+
+   width: 100%;
 }
 .prev {
 }
@@ -197,6 +219,10 @@ body {
 .slider__item {
    margin: 15px 30px;
    text-align: left;
+   transition: 0.3s;
+}
+.slider__item:hover {
+   transform: scale(1.05);
 }
 .slider__poster {
    width: 125px;
@@ -211,6 +237,47 @@ body {
    border-radius: 5px;
 }
 .item__title {
+   font-size: 16px;
+}
+
+.queryes {
+   width: 100%;
+   display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
+   margin: 15px;
+   text-align: center;
+}
+.queries__btn {
+   padding: 10px 25px;
+   margin: 5px 10px;
+   background: var(--black-color);
+   color: var(--light-color);
+   border-radius: 20px;
+   font-weight: 700;
+   transition: 0.5s;
+}
+.queries__btn:hover {
+   color: var(--focus-color);
+   animation: tremor 0.5s;
+}
+
+@keyframes tremor {
+   0% {
+      transform: translateX(-5%);
+   }
+   25% {
+      transform: translateX(5%);
+   }
+   50% {
+      transform: translateX(-2%);
+   }
+   75% {
+      transform: translateX(2%);
+   }
+   100% {
+      transform: translateX(0);
+   }
 }
 
 .movies {
@@ -322,4 +389,18 @@ body {
 .footer__link:hover {
    color: var(--focus-color);
    filter: blur(1px);
+}
+.api__contribution {
+   color: var(--main-color);
+}
+.tmdb__link {
+   display: block;
+   width: 150px;
+   transition: 0.5s;
+}
+.tmdb__link:hover {
+   transform: scale(1.03);
+}
+.tmdb__link:hover svg path {
+   fill: inherit;
 }
