@@ -5,12 +5,34 @@ var url = "http://www.omdbapi.com/?apikey=c8ed38c2&s=back&";
 fetch(url, {
    "method": "GET",
 })
-   .then(response => console.log(response.json()))
-   /*.then(data => {
-      console.log(data);
-      const list = data.Poster;
-      console.log(list);
-   })*/
+   .then(response => response.json())
+   .then(data => {
+     // console.log(data);
+      const list = data.Search;
+     // console.log(list);
+      list.map((item) => {
+         const title = item.Title;
+         const poster = item.Poster;
+         
+         const imdbID = item.imdbID;
+
+
+         fetch(`http://www.omdbapi.com/?apikey=c8ed38c2&i=${imdbID}&`, {
+            "method": "GET",
+         })
+            .then(response => response.json())
+            .then(movieData => {
+               //console.log(movieData);
+               const plot = movieData.Plot;
+               const rating = movieData.imdbRating;
+               const movie = `<div class="movie__container"><img src="${poster}" alt="${title}" /><h2>${title}</h2><div class="movie__rate"><div class="movie__stars">IMDB Rating</div><h3 class="rate">${rating}</h3></div><p class="movie__plot">${plot}</p></div>`;
+               document.querySelector(".movies").innerHTML += movie;
+            });
+
+
+
+      });
+   })
    .catch(err => {
       console.error(err);
    });
@@ -43,6 +65,22 @@ fetch("https://imdb8.p.rapidapi.com/auto-complete?q=game", {
    });
    */
 
+/*
+            <div class="movie__container">
+              <img src="./assets/poster-test.jpg" alt="" />
+              <h2>Movie title</h2>
+              <div class="movie__rate">
+                <div class="movie__stars">IMDB Rating</div>
+                <h3 class="rate">9.0</h3>
+              </div>
+              <p class="movie__plot">
+                Lorem, ipsum dolor sысысысыфым
+              </p>
+            </div>
+
+*/
+
+
 const searchBox = document.querySelector(".search__str");
 const clearButton = document.querySelector(".clear__btn");
 const searchButton = document.querySelector(".search__btn");
@@ -50,21 +88,21 @@ const searchButton = document.querySelector(".search__btn");
 window.onload = () => {
    searchBox.focus();
 }
-searchBox.addEventListener("change", function(){
+searchBox.addEventListener("change", function () {
    url = `http://www.omdbapi.com/?apikey=c8ed38c2&s=${this.value}&`
    console.log(url);
 });
-searchBox.addEventListener("input", function(){
-   if (this.value !== ""){
+searchBox.addEventListener("input", function () {
+   if (this.value !== "") {
       clearButton.classList.add("active");
       searchButton.classList.add("active")
    } else {
       clearButton.classList.remove("active");
       searchButton.classList.remove("active");
    }
-   
+
 })
-clearButton.addEventListener("click", function(){
+clearButton.addEventListener("click", function () {
    searchBox.value = "";
    this.classList.remove("active");
    searchButton.classList.remove("active");
