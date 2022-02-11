@@ -7,17 +7,17 @@ fetch(url, {
 })
    .then(response => response.json())
    .then(data => {
-     // console.log(data);
+      // console.log(data);
       const list = data.Search;
-     // console.log(list);
+      // console.log(list);
       list.map((item) => {
          const title = item.Title;
          const poster = item.Poster;
-         
+
          const imdbID = item.imdbID;
 
 
-         fetch(`http://www.omdbapi.com/?apikey=c8ed38c2&i=${imdbID}&`, {
+         fetch(`https://www.omdbapi.com/?apikey=c8ed38c2&i=${imdbID}&`, {
             "method": "GET",
          })
             .then(response => response.json())
