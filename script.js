@@ -1,7 +1,44 @@
-var url = "https://www.omdbapi.com/?apikey=c8ed38c2&s=back&";
+// START WITH THIS URL ^)
+// var url = "https://www.omdbapi.com/?apikey=c8ed38c2&s=back&";
 
-/*var url = "https://api.themoviedb.org/3/search/company?api_key=e3d3ddb01fbf1cb4fe05c7d1d14ed8a9&query=marvel&page=1";*/
 
+
+var basicURL = "https://www.omdbapi.com/?apikey=c8ed38c2&";
+
+
+// FUNCTION GETS MOVIE DATA FROM API BY ***ANY**** URL and DRAW MOVIES SECTION CONTENT
+async function getApiData(url) {
+   const response = await fetch(url);
+   const data = await response.json();
+
+   moviesContainer.innerHTML = '';
+
+   //console.log(data);
+   const list = data.Search;
+   //console.log(list);
+
+   list.map((item) => {
+      const imdbID = item.imdbID;
+      getMovieData(`${basicURL}i=${imdbID}&`);
+   });
+};
+
+
+// FUNCTION GETS MOVIE DATA FROM API BY IMDB-ID and DRAW MOVIES SECTION CONTENT
+async function getMovieData(url) {
+   const response = await fetch(url);
+   const movieData = await response.json();
+
+   const title = movieData.Title;
+   const poster = movieData.Poster;
+   const plot = movieData.Plot;
+   const rating = movieData.imdbRating;
+   const movie = `<div class="movie__container"><img src="${poster}" alt="${title}" /><h2>${title}</h2><div class="movie__rate"><div class="movie__stars">IMDB Rating</div><h3 class="rate">${rating}</h3></div><p class="movie__plot">${plot}</p></div>`;
+
+   moviesContainer.innerHTML += movie;
+};
+
+/* GOOD WORKING VARIANT ============================
 fetch(url, {
    "method": "GET",
 })
@@ -36,6 +73,8 @@ fetch(url, {
    .catch(err => {
       console.error(err);
    });
+*/
+
 
 
 /* IMDB API */
@@ -65,33 +104,44 @@ fetch("https://imdb8.p.rapidapi.com/auto-complete?q=game", {
    });
    */
 
-/*
-            <div class="movie__container">
-              <img src="./assets/poster-test.jpg" alt="" />
-              <h2>Movie title</h2>
-              <div class="movie__rate">
-                <div class="movie__stars">IMDB Rating</div>
-                <h3 class="rate">9.0</h3>
-              </div>
-              <p class="movie__plot">
-                Lorem, ipsum dolor sысысысыфым
-              </p>
-            </div>
 
-*/
-
+const moviesContainer = document.querySelector(".movies");
 
 const searchBox = document.querySelector(".search__str");
 const clearButton = document.querySelector(".clear__btn");
 const searchButton = document.querySelector(".search__btn");
 
+
 window.onload = () => {
    searchBox.focus();
+   getApiData(`${basicURL}s=white&`)
+      .catch(err => {
+         console.error(err);
+      });
 }
+
+// ON PRESS ENTER ON INPUT ACTION
 searchBox.addEventListener("change", function () {
-   url = `http://www.omdbapi.com/?apikey=c8ed38c2&s=${this.value}&`
+   url = `${basicURL}s=${this.value}&`;
    console.log(url);
+   getApiData(url)
+      .catch(err => {
+         console.error(err);
+      });
 });
+
+// BUTTON SEARCH ACTION
+searchButton.addEventListener("click", function () {
+   if (searchBox.value !== '') {
+      url = `${basicURL}s=${this.value}&`;
+      console.log(url);
+      getApiData(url)
+         .catch(err => {
+            console.error(err);
+         });
+   }
+});
+// ON INPUT CHANGE FOCUS
 searchBox.addEventListener("input", function () {
    if (this.value !== "") {
       clearButton.classList.add("active");
