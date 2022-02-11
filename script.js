@@ -3,7 +3,7 @@
 
 
 
-var basicURL = "https://www.omdbapi.com/?apikey=c8ed38c2&";
+var basicURL = "https://www.omdbapi.com/?apikey=c8ed38c2&plot=full&";
 
 
 // FUNCTION GETS MOVIE DATA FROM API BY ***ANY**** URL and DRAW MOVIES SECTION CONTENT
