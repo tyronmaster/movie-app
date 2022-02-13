@@ -1,8 +1,14 @@
+/* HORISONTAL SCROLL  DOESN'T WORK PROPERLY
+import scroller from "./scroll.js";
+scroller();
+*/
+
+
 // START WITH THIS URL ^)
 // var url = "https://www.omdbapi.com/?apikey=c8ed38c2&s=back&";
 
 
-
+var url = "";
 var basicURL = "https://www.omdbapi.com/?apikey=c8ed38c2&plot=full&";
 
 
@@ -38,107 +44,62 @@ async function getMovieData(url) {
    moviesContainer.innerHTML += movie;
 };
 
-/* GOOD WORKING VARIANT ============================
-fetch(url, {
-   "method": "GET",
-})
-   .then(response => response.json())
-   .then(data => {
-      // console.log(data);
-      const list = data.Search;
-      // console.log(list);
-      list.map((item) => {
-         const title = item.Title;
-         const poster = item.Poster;
-
-         const imdbID = item.imdbID;
-
-
-         fetch(`https://www.omdbapi.com/?apikey=c8ed38c2&i=${imdbID}&`, {
-            "method": "GET",
-         })
-            .then(response => response.json())
-            .then(movieData => {
-               //console.log(movieData);
-               const plot = movieData.Plot;
-               const rating = movieData.imdbRating;
-               const movie = `<div class="movie__container"><img src="${poster}" alt="${title}" /><h2>${title}</h2><div class="movie__rate"><div class="movie__stars">IMDB Rating</div><h3 class="rate">${rating}</h3></div><p class="movie__plot">${plot}</p></div>`;
-               document.querySelector(".movies").innerHTML += movie;
-            });
-
-
-
-      });
-   })
-   .catch(err => {
-      console.error(err);
-   });
-*/
-
-
-
-/* IMDB API */
-/*
-fetch("https://imdb8.p.rapidapi.com/auto-complete?q=game", {
-   "method": "GET",
-   "headers": {
-      "x-rapidapi-host": "imdb8.p.rapidapi.com",
-      "x-rapidapi-key": "5034c4df4emsh426a86961656757p1cf604jsn169cd90a84a4"
-   }
-})
-   .then(response => response.json())
-   .then(data => {
-      //console.log(data);
-      const list = data.d;
-
-      list.map( (item) => {
-         const name = item.l;
-         const poster = item.i.imageUrl;
-         const movie = `<li><img src="${poster}" alt="image poster"><h2>${name}</h2></li>`;
-         document.querySelector(".movies").innerHTML += movie;
-      })
-      //console.log(list);
-   })
-   .catch(err => {
-      console.error(err);
-   });
-   */
-
 
 const moviesContainer = document.querySelector(".movies");
 
 const searchBox = document.querySelector(".search__str");
 const clearButton = document.querySelector(".clear__btn");
 const searchButton = document.querySelector(".search__btn");
+const queryes = document.querySelectorAll(".queries__btn");
 
 
 window.onload = () => {
    searchBox.focus();
-   getApiData(`${basicURL}s=white&`)
+   loader();
+   getApiData(`${basicURL}s=back&`)
       .catch(err => {
          console.error(err);
+         moviesContainer.innerHTML = `<div class="noresults">Oooooooooooops!<br><br>No results or embarrassing content.</div>`;
       });
 }
 
 // ON PRESS ENTER ON INPUT ACTION
 searchBox.addEventListener("change", function () {
    url = `${basicURL}s=${this.value}&`;
-   console.log(url);
+   drawContent(url);
+   //console.log(url);
+
+   /* create help function drawContant(url) from this code */
+   /* 
+   loader();
    getApiData(url)
       .catch(err => {
          console.error(err);
+         var i = 0;
+         var interval = setInterval(function(){
+            moviesContainer.innerHTML = `<div class="error__404">${i}</div>`;
+            if (i <= 350){
+               i += 10;
+            } else {
+               i++;
+            }
+            if(i == 405) {
+               clearInterval(interval);
+            }
+         }, 0);
+         setTimeout(function(){
+            moviesContainer.innerHTML += `<div class="noresults">Oooooooooooops!<br><br>No results or embarrassing content.</div>`;
+         },1500); 
       });
+      */
 });
 
 // BUTTON SEARCH ACTION
 searchButton.addEventListener("click", function () {
    if (searchBox.value !== '') {
       url = `${basicURL}s=${this.value}&`;
-      console.log(url);
-      getApiData(url)
-         .catch(err => {
-            console.error(err);
-         });
+      drawContent(url);
+      //console.log(url);
    }
 });
 // ON INPUT CHANGE FOCUS
@@ -157,11 +118,56 @@ clearButton.addEventListener("click", function () {
    this.classList.remove("active");
    searchButton.classList.remove("active");
 })
+queryes.forEach((item) => {
+   item.addEventListener("click", function() {
+      const query = this.textContent;
+      //console.log(parseInt(query) +"  " + typeof (parseInt(query)));
+
+      if (isNaN(Number(query))){
+         url = `${basicURL}s=${query}`;
+      } else {
+         url = `${basicURL}s=marvel&y=${query}`;
+      }
+      drawContent(url);
+      //console.log(url);
+      //console.log(this + " click");
+   });
+})
 
 
+/* HELP FUNCTIONS */
+
+// windows loader
+function loader(){
+   moviesContainer.innerHTML = `<div class="loader"><div class="circle"></div><div class="circle"></div><div class="circle"></div><div class="circle"></div><div class="circle"></div></div>`;
+}
+
+// draw content from url and show 404 if not found
+function drawContent(url){
+   loader();
+   getApiData(url)
+      .catch(err => {
+         console.error(err);
+         moviesContainer.innerHTML = "";
+         var i = 0;
+         var interval = setInterval(function(){
+            moviesContainer.innerHTML = `<div class="error__404">${i}</div>`;
+            if (i <= 350){
+               i += 10;
+            } else {
+               i++;
+            }
+            if(i == 405) {
+               clearInterval(interval);
+            }
+         }, 0);
+         setTimeout(function(){
+            moviesContainer.innerHTML += `<div class="noresults">Oooooooooooops!<br><br>No results or embarrassing content.</div>`;
+         },1500); 
+      });
+}
 
 /*
-
 Вёрстка +10
 ++ на странице есть несколько карточек фильмов и строка поиска. 
    На каждой карточке фильма есть постер и название фильма. 
@@ -214,8 +220,65 @@ clearButton.addEventListener("click", function () {
    ++ дополнительным функционалом может быть, например, наличие на карточке фильма 
       его описания и рейтинга на IMDb
 
-
-
-
-
 */
+
+
+/* GOOD WORKING VARIANT ============================
+fetch(url, {
+   "method": "GET",
+})
+   .then(response => response.json())
+   .then(data => {
+      // console.log(data);
+      const list = data.Search;
+      // console.log(list);
+      list.map((item) => {
+         const title = item.Title;
+         const poster = item.Poster;
+         const imdbID = item.imdbID;
+         fetch(`https://www.omdbapi.com/?apikey=c8ed38c2&i=${imdbID}&`, {
+            "method": "GET",
+         })
+            .then(response => response.json())
+            .then(movieData => {
+               //console.log(movieData);
+               const plot = movieData.Plot;
+               const rating = movieData.imdbRating;
+               const movie = `<div class="movie__container"><img src="${poster}" alt="${title}" /><h2>${title}</h2><div class="movie__rate"><div class="movie__stars">IMDB Rating</div><h3 class="rate">${rating}</h3></div><p class="movie__plot">${plot}</p></div>`;
+               document.querySelector(".movies").innerHTML += movie;
+            });
+      });
+   })
+   .catch(err => {
+      console.error(err);
+   });
+*/
+
+
+
+/* IMDB API */
+/*
+fetch("https://imdb8.p.rapidapi.com/auto-complete?q=game", {
+   "method": "GET",
+   "headers": {
+      "x-rapidapi-host": "imdb8.p.rapidapi.com",
+      "x-rapidapi-key": "5034c4df4emsh426a86961656757p1cf604jsn169cd90a84a4"
+   }
+})
+   .then(response => response.json())
+   .then(data => {
+      //console.log(data);
+      const list = data.d;
+
+      list.map( (item) => {
+         const name = item.l;
+         const poster = item.i.imageUrl;
+         const movie = `<li><img src="${poster}" alt="image poster"><h2>${name}</h2></li>`;
+         document.querySelector(".movies").innerHTML += movie;
+      })
+      //console.log(list);
+   })
+   .catch(err => {
+      console.error(err);
+   });
+   */
