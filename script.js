@@ -1,13 +1,3 @@
-/* HORISONTAL SCROLL  DOESN'T WORK PROPERLY
-import scroller from "./scroll.js";
-scroller();
-*/
-
-
-// START WITH THIS URL ^)
-// var url = "https://www.omdbapi.com/?apikey=c8ed38c2&s=back&";
-
-
 var url = "";
 var basicURL = "https://www.omdbapi.com/?apikey=c8ed38c2&plot=full&";
 
@@ -51,7 +41,7 @@ async function getApiDataSlider(url) {
    const response = await fetch(url);
    const data = await response.json();
 
-   track.innerHTML = '';
+   sliderTrack.innerHTML = '';
 
    const sliderDataList = data.Search;
 
@@ -71,7 +61,7 @@ async function getSliderData(url) {
    const rating = movieData.imdbRating;
    const movie = `<div class="slider__item"><div class="slider__poster"><img src="${poster}" alt="${title}" /></div><!--<h2 class="item__title">${title}</h2>--></div>`;
 
-   track.innerHTML += movie;
+   sliderTrack.innerHTML += movie;
 };
 /* SLIDER SECTION CONTENT BUILDER ---------------------------------------------------------- */
 
@@ -181,158 +171,54 @@ function drawContent(url) {
 const nextButton = document.querySelector(".next");
 const prevButton = document.querySelector(".prev");
 const sliderContainer = document.querySelector(".slider__container");
-const track = document.querySelector(".slider__track");
+const sliderTrack = document.querySelector(".slider__track");
 const sliderItem = document.querySelector(".slider__item");
 
-//var trackPosition = window.getComputedStyle(track).left;
-var totalWidth = track.offsetWidth;
-var itemWidth = sliderItem.offsetWidth + 60;
-var step = Math.floor(sliderContainer.offsetWidth / itemWidth) * itemWidth;
-console.log(totalWidth + " " + step + " " + track.style.left + " " + itemWidth);
 var trackPosition = 0;
+var itemWidth = 185;
+var step = 0;
+var totalWidth = 0;
 
 nextButton.addEventListener("click", function () {
+
    prevButton.style.pointerEvents = "auto";
-   //console.log(trackPosition);
+
+   totalWidth = sliderTrack.offsetWidth;
+   step = Math.floor(sliderContainer.offsetWidth / itemWidth) * itemWidth;
+
    if (trackPosition + 2 * step > totalWidth) {
       this.style.pointerEvents = "none";
       trackPosition = totalWidth - step;
-      track.style.left = -trackPosition + "px";
+      sliderTrack.style.left = -trackPosition + "px";
       //console.log(trackPosition);
    } else {
       trackPosition += step;
-      track.style.left = -trackPosition + "px";
+      sliderTrack.style.left = -trackPosition + "px";
    }
-   //console.log(trackPosition);
+   //console.log(step + " " + trackPosition + " " + sliderTrack.style.left);
 });
 prevButton.addEventListener("click", function () {
+
    nextButton.style.pointerEvents = "auto";
+   
+   totalWidth = sliderTrack.offsetWidth;
+   step = Math.floor(sliderContainer.offsetWidth / itemWidth) * itemWidth;
+
    //console.log(trackPosition);
+   //console.log(step);
+
    if (trackPosition - 2 * step < 0) {
       this.style.pointerEvents = "none";
       trackPosition = 0;
-      track.style.left = 0;
+      sliderTrack.style.left = 0;
       //console.log(trackPosition);
    } else {
       trackPosition -= step;
-      track.style.left = trackPosition + "px";
+      //console.log(trackPosition);
+      sliderTrack.style.left = -trackPosition + "px";
    }
-   //console.log(trackPosition);
+   //console.log(step + " " + trackPosition + " " + sliderTrack.style.left);
 });
 /* SLIDER NAVIGATION SECTION ----------------------------------------------- */
 
-/*
-Вёрстка +10
-++ на странице есть несколько карточек фильмов и строка поиска. 
-   На каждой карточке фильма есть постер и название фильма. 
-   Также на карточке может быть другая информация, которую предоставляет API, 
-   например, описание фильма, его рейтинг на IMDb и т.д. 
-   +5
-
-++ в футере приложения есть ссылка на гитхаб автора приложения, 
-   год создания приложения, логотип курса со ссылкой на курс 
-   +5
-
--- При загрузке приложения на странице отображаются карточки фильмов 
-   с полученными от API данными 
-   +10
-
--- Если в поле поиска ввести слово и отправить поисковый запрос, 
-   на странице отобразятся карточки фильмов, в названиях которых 
-   есть это слово, если такие данные предоставляет API 
-   +10
-
-++ Поиск +30
-
-  ++ при открытии приложения курсор находится в поле ввода 
-     +5
-
-  ++ есть placeholder 
-     +5
-
-  -- автозаполнение поля ввода отключено (нет выпадающего списка с предыдущими запросами) 
-     +5
-
-  -- поисковый запрос можно отправить нажатием клавиши Enter 
-     +5
-
-  -- после отправки поискового запроса и отображения результатов поиска, 
-     поисковый запрос продолжает отображаться в поле ввода 
-     +5
-
-  ++ в поле ввода есть крестик при клике по которому поисковый запрос из поля 
-     ввода удаляется и отображается placeholder 
-     +5
-
-++ Очень высокое качество оформления приложения и/или дополнительный не предусмотренный 
-   в задании функционал, улучшающий качество приложения 
-   +10
-
-   ++ высокое качество оформления приложения предполагает собственное 
-      оригинальное оформление равное или отличающееся в лучшую сторону по сравнению с демо
-
-   ++ дополнительным функционалом может быть, например, наличие на карточке фильма 
-      его описания и рейтинга на IMDb
-
-*/
-
-
-/* GOOD WORKING VARIANT ============================
-fetch(url, {
-   "method": "GET",
-})
-   .then(response => response.json())
-   .then(data => {
-      // console.log(data);
-      const list = data.Search;
-      // console.log(list);
-      list.map((item) => {
-         const title = item.Title;
-         const poster = item.Poster;
-         const imdbID = item.imdbID;
-         fetch(`https://www.omdbapi.com/?apikey=c8ed38c2&i=${imdbID}&`, {
-            "method": "GET",
-         })
-            .then(response => response.json())
-            .then(movieData => {
-               //console.log(movieData);
-               const plot = movieData.Plot;
-               const rating = movieData.imdbRating;
-               const movie = `<div class="movie__container"><img src="${poster}" alt="${title}" /><h2>${title}</h2><div class="movie__rate"><div class="movie__stars">IMDB Rating</div><h3 class="rate">${rating}</h3></div><p class="movie__plot">${plot}</p></div>`;
-               document.querySelector(".movies").innerHTML += movie;
-            });
-      });
-   })
-   .catch(err => {
-      console.error(err);
-   });
-*/
-
-
-
-/* IMDB API */
-/*
-fetch("https://imdb8.p.rapidapi.com/auto-complete?q=game", {
-   "method": "GET",
-   "headers": {
-      "x-rapidapi-host": "imdb8.p.rapidapi.com",
-      "x-rapidapi-key": "5034c4df4emsh426a86961656757p1cf604jsn169cd90a84a4"
-   }
-})
-   .then(response => response.json())
-   .then(data => {
-      //console.log(data);
-      const list = data.d;
-
-      list.map( (item) => {
-         const name = item.l;
-         const poster = item.i.imageUrl;
-         const movie = `<li><img src="${poster}" alt="image poster"><h2>${name}</h2></li>`;
-         document.querySelector(".movies").innerHTML += movie;
-      })
-      //console.log(list);
-   })
-   .catch(err => {
-      console.error(err);
-   });
-   */
+console.log('1. Task: js30#2.3-movie-app \n2. Done 14.02.2022 / 14.02.2022 23:59 UTC \n3. Score: 60 / 60 \n+ Вёрстка +10\n   + При загрузке приложения на странице отображаются карточки фильмов с полученными от API данными +10 \n   + Если в поле поиска ввести слово и отправить поисковый запрос, на странице отобразятся карточки фильмов, в названиях которых есть это слово, если такие данные предоставляет API +10 \n   + Поиск +30:\n   + при открытии приложения курсор находится в поле ввода +5\n   + есть placeholder +5\n   + автозаполнение поля ввода отключено +5\n   + поисковый запрос можно отправить нажатием клавиши Enter +5\n   + после отправки поискового запроса и отображения результатов поиска, поисковый запрос продолжает отображаться в поле ввода +5\n   + в поле ввода есть крестик при клике по которому поисковый запрос из поля ввода удаляется и отображается placeholder +5\n   + Очень высокое качество оформления приложения и/или дополнительный не предусмотренный в задании функционал, улучшающий качество приложения +10:\n   + собственное оригинальное оформление равное или отличающееся в лучшую сторону по сравнению с демо\n   + дополнительныйфункционал:\n   + наличие на карточке фильма его описания и рейтинга на IMDb\n   + кастомная прокрутка описания, если оно больше высоты карточки\n   + карусель');
