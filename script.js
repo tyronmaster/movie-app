@@ -43,6 +43,37 @@ async function getMovieData(url) {
 
    moviesContainer.innerHTML += movie;
 };
+/* MOVIE SECTION CONTENT BUILDER ---------------------------------------------------------- */
+
+
+/* SLIDER SECTION CONTENT BUILDER  ========================================================*/
+async function getApiDataSlider(url) {
+   const response = await fetch(url);
+   const data = await response.json();
+
+   track.innerHTML = '';
+
+   const sliderDataList = data.Search;
+
+   sliderDataList.map((item) => {
+      const imdbID = item.imdbID;
+      getSliderData(`${basicURL}i=${imdbID}&`);
+   });
+};
+// FUNCTION GETS MOVIE DATA FROM API BY IMDB-ID and DRAW MOVIES SECTION CONTENT
+async function getSliderData(url) {
+   const response = await fetch(url);
+   const movieData = await response.json();
+
+   const title = movieData.Title;
+   const poster = movieData.Poster;
+   const plot = movieData.Plot;
+   const rating = movieData.imdbRating;
+   const movie = `<div class="slider__item"><div class="slider__poster"><img src="${poster}" alt="${title}" /></div><!--<h2 class="item__title">${title}</h2>--></div>`;
+
+   track.innerHTML += movie;
+};
+/* SLIDER SECTION CONTENT BUILDER ---------------------------------------------------------- */
 
 
 const moviesContainer = document.querySelector(".movies");
@@ -55,43 +86,20 @@ const queryes = document.querySelectorAll(".queries__btn");
 
 window.onload = () => {
    searchBox.focus();
-   loader();
-   getApiData(`${basicURL}s=back&`)
-      .catch(err => {
-         console.error(err);
-         moviesContainer.innerHTML = `<div class="noresults">Oooooooooooops!<br><br>No results or embarrassing content.</div>`;
-      });
+
+   getApiDataSlider(`${basicURL}s=marvel&type=movie&`); // content for SLIDER section
+
+   url = `${basicURL}s=back&`;
+   drawContent(url); // content for MOVIES section
+
+
+
 }
 
 // ON PRESS ENTER ON INPUT ACTION
 searchBox.addEventListener("change", function () {
    url = `${basicURL}s=${this.value}&`;
    drawContent(url);
-   //console.log(url);
-
-   /* create help function drawContant(url) from this code */
-   /* 
-   loader();
-   getApiData(url)
-      .catch(err => {
-         console.error(err);
-         var i = 0;
-         var interval = setInterval(function(){
-            moviesContainer.innerHTML = `<div class="error__404">${i}</div>`;
-            if (i <= 350){
-               i += 10;
-            } else {
-               i++;
-            }
-            if(i == 405) {
-               clearInterval(interval);
-            }
-         }, 0);
-         setTimeout(function(){
-            moviesContainer.innerHTML += `<div class="noresults">Oooooooooooops!<br><br>No results or embarrassing content.</div>`;
-         },1500); 
-      });
-      */
 });
 
 // BUTTON SEARCH ACTION
@@ -102,6 +110,7 @@ searchButton.addEventListener("click", function () {
       //console.log(url);
    }
 });
+
 // ON INPUT CHANGE FOCUS
 searchBox.addEventListener("input", function () {
    if (this.value !== "") {
@@ -111,7 +120,6 @@ searchBox.addEventListener("input", function () {
       clearButton.classList.remove("active");
       searchButton.classList.remove("active");
    }
-
 })
 clearButton.addEventListener("click", function () {
    searchBox.value = "";
@@ -119,11 +127,11 @@ clearButton.addEventListener("click", function () {
    searchButton.classList.remove("active");
 })
 queryes.forEach((item) => {
-   item.addEventListener("click", function() {
+   item.addEventListener("click", function () {
       const query = this.textContent;
       //console.log(parseInt(query) +"  " + typeof (parseInt(query)));
 
-      if (isNaN(Number(query))){
+      if (isNaN(Number(query))) {
          url = `${basicURL}s=${query}`;
       } else {
          url = `${basicURL}s=marvel&y=${query}`;
@@ -138,34 +146,80 @@ queryes.forEach((item) => {
 /* HELP FUNCTIONS */
 
 // windows loader
-function loader(){
+function loader() {
    moviesContainer.innerHTML = `<div class="loader"><div class="circle"></div><div class="circle"></div><div class="circle"></div><div class="circle"></div><div class="circle"></div></div>`;
 }
 
 // draw content from url and show 404 if not found
-function drawContent(url){
+function drawContent(url) {
    loader();
    getApiData(url)
       .catch(err => {
          console.error(err);
          moviesContainer.innerHTML = "";
          var i = 0;
-         var interval = setInterval(function(){
+         var interval = setInterval(function () {
             moviesContainer.innerHTML = `<div class="error__404">${i}</div>`;
-            if (i <= 350){
+            if (i <= 350) {
                i += 10;
             } else {
                i++;
             }
-            if(i == 405) {
+            if (i == 405) {
                clearInterval(interval);
             }
          }, 0);
-         setTimeout(function(){
-            moviesContainer.innerHTML += `<div class="noresults">Oooooooooooops!<br><br>No results or embarrassing content.</div>`;
-         },1500); 
+         setTimeout(function () {
+            moviesContainer.innerHTML += `<div class="noresults">Oooooooooooops!<br><br>No results or inappropriate content.</div>`;
+         }, 1500);
       });
 }
+
+
+/* SLIDER NAVIGATION SECTION =================================================== */
+
+const nextButton = document.querySelector(".next");
+const prevButton = document.querySelector(".prev");
+const sliderContainer = document.querySelector(".slider__container");
+const track = document.querySelector(".slider__track");
+const sliderItem = document.querySelector(".slider__item");
+
+//var trackPosition = window.getComputedStyle(track).left;
+var totalWidth = track.offsetWidth;
+var itemWidth = sliderItem.offsetWidth + 60;
+var step = Math.floor(sliderContainer.offsetWidth / itemWidth) * itemWidth;
+console.log(totalWidth + " " + step + " " + track.style.left + " " + itemWidth);
+var trackPosition = 0;
+
+nextButton.addEventListener("click", function () {
+   prevButton.style.pointerEvents = "auto";
+   //console.log(trackPosition);
+   if (trackPosition + 2 * step > totalWidth) {
+      this.style.pointerEvents = "none";
+      trackPosition = totalWidth - step;
+      track.style.left = -trackPosition + "px";
+      //console.log(trackPosition);
+   } else {
+      trackPosition += step;
+      track.style.left = -trackPosition + "px";
+   }
+   //console.log(trackPosition);
+});
+prevButton.addEventListener("click", function () {
+   nextButton.style.pointerEvents = "auto";
+   //console.log(trackPosition);
+   if (trackPosition - 2 * step < 0) {
+      this.style.pointerEvents = "none";
+      trackPosition = 0;
+      track.style.left = 0;
+      //console.log(trackPosition);
+   } else {
+      trackPosition -= step;
+      track.style.left = trackPosition + "px";
+   }
+   //console.log(trackPosition);
+});
+/* SLIDER NAVIGATION SECTION ----------------------------------------------- */
 
 /*
 Вёрстка +10

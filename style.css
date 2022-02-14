@@ -4,6 +4,7 @@
   --light-color: #e5e5e5;
   --dark-color: #111111;
   --black-color: #000000;
+  --help-color: #ecea5d;
 }
 
 *,
@@ -240,7 +241,8 @@ body {
 .slider__title {
   margin: 25px 0 0 0;
   font-size: 28px;
-  font-weight: 400;
+  font-weight: 700;
+  padding-bottom: 15px;
 }
 .slider__body {
   display: flex;
@@ -251,7 +253,15 @@ body {
   position: relative;
   text-align: center;
 
-  width: 100%;
+  width: 90%;
+}
+.prev svg path,
+.next svg path {
+  fill: var(--focus-color);
+}
+.prev:hover svg path,
+.next:hover svg path {
+  fill: var(--light-color);
 }
 .prev {
   transform: rotate(180deg);
@@ -260,31 +270,41 @@ body {
 .next {
   cursor: pointer;
 }
+
 .slider__container {
   width: 90%;
   /*background: #ffffff;*/
   height: 250px;
   border-radius: 25px;
+  background: rgba(0, 0, 0, 0.4);
   overflow: hidden;
+  position: relative;
+  transition: 0.5s;
 }
 
 .slider__track {
+  position: absolute;
+  left: 0;
   overflow-y: hidden;
-  overflow-x: auto;
+  /*overflow-x: auto;*/
+  overflow-x: hidden;
 
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
 
+  transition: 0.5s;
+
   /* customize scrollbar */
   scrollbar-width: thin;
-  scrollbar-color: var(--black-color) var(--dark-color);
+  scrollbar-color: var(--black-color) rgba(0, 0, 0, 0.1);
+  /*scrollbar-color: var(--black-color) var(--dark-color);*/
 }
 /* customize scrollbar for -webkit browsers*/
 .slider__track::-webkit-scrollbar {
   height: 8px;
-  background: var(--dark-color);
+  background: rgba(0, 0, 0, 0.1);
 }
 .slider__track::-webkit-scrollbar-thumb {
   background: var(--black-color);
@@ -294,13 +314,19 @@ body {
   margin: 15px 30px;
   text-align: left;
   transition: 0.3s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  max-height: 250px;
 }
 .slider__item:hover {
   transform: scale(1.05);
 }
 .slider__poster {
-  width: 125px;
-  height: 150px;
+  width: 150px;
+  height: 225px;
   border-radius: 5px;
   margin-bottom: 10px;
 }
@@ -311,7 +337,11 @@ body {
   border-radius: 5px;
 }
 .item__title {
-  font-size: 16px;
+  font-size: 12px;
+  display: block;
+  max-width: 100px;
+  overflow: hidden;
+  /*max-height: 20px;*/
 }
 
 .queryes {
